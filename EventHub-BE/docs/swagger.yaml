@@ -1,0 +1,820 @@
+basePath: /
+definitions:
+  dto.Account:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.AdminDashboardResponse:
+    properties:
+      avg_fill_rate:
+        type: number
+      total_communities:
+        type: integer
+      total_events:
+        type: integer
+      total_users:
+        type: integer
+    type: object
+  dto.CreateEvent:
+    properties:
+      capacity:
+        minimum: 1
+        type: integer
+      category_id:
+        minimum: 1
+        type: integer
+      community_id:
+        type: integer
+      description:
+        type: string
+      end_time:
+        type: string
+      event_format:
+        type: string
+      images:
+        type: string
+      location:
+        type: string
+      position_job:
+        type: string
+      speaker_id:
+        type: integer
+      speaker_name:
+        type: string
+      start_time:
+        type: string
+      title:
+        type: string
+    required:
+    - capacity
+    - category_id
+    - description
+    - end_time
+    - event_format
+    - images
+    - location
+    - start_time
+    - title
+    type: object
+  dto.CreateTestimonial:
+    properties:
+      text:
+        type: string
+    required:
+    - text
+    type: object
+  dto.Res:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: boolean
+      token: {}
+    type: object
+  model.CommunityDetail:
+    properties:
+      category_ids:
+        items:
+          type: integer
+        type: array
+      description:
+        type: string
+      id:
+        minimum: 1
+        type: integer
+      images:
+        type: string
+      member_count:
+        type: integer
+      title:
+        type: string
+      user_id:
+        type: integer
+    required:
+    - id
+    type: object
+  model.EventDetail:
+    properties:
+      attendees:
+        type: integer
+      capacity:
+        type: integer
+      categories:
+        items:
+          type: string
+        type: array
+      community_id:
+        type: integer
+      community_images:
+        type: string
+      community_title:
+        type: string
+      description:
+        type: string
+      end_time:
+        type: string
+      event_format:
+        type: string
+      id:
+        type: integer
+      images:
+        type: string
+      location:
+        type: string
+      start_time:
+        type: string
+      title:
+        type: string
+    type: object
+  model.MyNotif:
+    properties:
+      desk:
+        type: string
+      id_notif:
+        minimum: 1
+        type: integer
+      read_at:
+        type: string
+      time:
+        type: string
+      title:
+        type: string
+      type:
+        type: string
+    required:
+    - id_notif
+    type: object
+  model.PopularCommunity:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      images:
+        type: string
+      member_count:
+        type: integer
+      title:
+        type: string
+    type: object
+  model.Regis:
+    properties:
+      email:
+        type: string
+      fullname:
+        type: string
+      password:
+        type: string
+    type: object
+  model.Testimonial:
+    properties:
+      full_name:
+        type: string
+      id:
+        type: integer
+      job:
+        type: string
+      profile:
+        type: string
+      text:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  model.UpcomingEvent:
+    properties:
+      attendees:
+        type: integer
+      capacity:
+        type: integer
+      end_time:
+        type: string
+      event_format:
+        type: string
+      id:
+        minimum: 1
+        type: integer
+      images:
+        type: string
+      location:
+        type: string
+      start_time:
+        type: string
+      title:
+        type: string
+    required:
+    - id
+    type: object
+  model.UserProfile:
+    properties:
+      bio:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        minimum: 1
+        type: integer
+      job:
+        type: string
+      location:
+        type: string
+      profile:
+        type: string
+    required:
+    - id
+    type: object
+host: localhost:5678
+info:
+  contact: {}
+  description: This is a sample server celler server.
+  title: EventHub BE
+  version: "1.0"
+paths:
+  /admin/dashboard:
+    get:
+      consumes:
+      - application/json
+      description: Get metrics and overview data for the admin dashboard
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AdminDashboardResponse'
+              type: object
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BearerAuth: []
+      summary: Get admin dashboard data
+      tags:
+      - Get admin dashboard information
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: login need token
+      parameters:
+      - description: Login credential
+        in: body
+        name: account
+        required: true
+        schema:
+          $ref: '#/definitions/dto.Account'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Login
+      tags:
+      - login
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      description: Invalidate user bearer token for logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: logout success
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: invalid bearer token
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Logout user
+      tags:
+      - logout
+  /auth/regis:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user account
+      parameters:
+      - description: Register payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.Regis'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: registration successful
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "400":
+          description: password length error / bad request
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "409":
+          description: user or email already exists
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: binding error / internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Register new user
+      tags:
+      - Regis
+  /communities/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information of a specific community by its ID
+      parameters:
+      - description: Community ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: community detail retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.CommunityDetail'
+              type: object
+        "400":
+          description: invalid community id
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Get community detail
+      tags:
+      - communities detail
+  /communities/popular:
+    get:
+      consumes:
+      - application/json
+      description: Get list of popular communities
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: popular communities retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.PopularCommunity'
+                  type: array
+              type: object
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Get popular communities
+      tags:
+      - popular communities
+  /events:
+    get:
+      description: don`t need token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Get all events
+      tags:
+      - Get all events with filter
+  /events/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information of a specific event by its ID
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: event detail retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.EventDetail'
+              type: object
+        "400":
+          description: invalid event id
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Get event detail
+      tags:
+      - events
+  /events/changeuserprofile:
+    patch:
+      consumes:
+      - multipart/form-data
+      description: Update user profile details for the authenticated user
+      parameters:
+      - description: User bio
+        in: formData
+        name: bio
+        type: string
+      - description: User location
+        in: formData
+        name: location
+        type: string
+      - description: User job
+        in: formData
+        name: job
+        type: string
+      - description: Profile image
+        in: formData
+        name: profile
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: profile updated successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: bad request error message
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: invalid token
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Change user profile
+      tags:
+      - Change User Profile
+  /events/createEvent:
+    post:
+      consumes:
+      - application/json
+      description: Create a new event using JSON payload
+      parameters:
+      - description: Create event payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateEvent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: event created success
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: failed to bind
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Create a new event
+      tags:
+      - create events
+  /events/my:
+    get:
+      description: Get events created by the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Get my events
+      tags:
+      - My Events
+  /events/upcoming:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all upcoming events
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success get upcoming events
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.UpcomingEvent'
+                  type: array
+              type: object
+        "500":
+          description: failed to get upcoming events
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Get upcoming events
+      tags:
+      - events upcomming
+  /notification/my:
+    get:
+      consumes:
+      - application/json
+      description: Get list of notifications for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: my notif retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.MyNotif'
+                  type: array
+              type: object
+        "401":
+          description: please login first / invalid token
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Get user notifications
+      tags:
+      - notifications
+  /testimonials:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all testimonials
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: testimonials retrieved successfully
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/model.Testimonial'
+                  type: array
+              type: object
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      summary: Get all testimonials
+      tags:
+      - Get all testimonials
+    post:
+      consumes:
+      - application/json
+      description: Create a new testimonial (requires authentication)
+      parameters:
+      - description: Create testimonial payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTestimonial'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: testimonial created successfully
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "400":
+          description: invalid request body
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: unauthorized
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: failed to create testimonial
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Create a new testimonial
+      tags:
+      - Create testimonials
+  /user/{eventId}/join:
+    get:
+      consumes:
+      - application/json
+      description: Join an event by providing the event ID
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: joined event success
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "400":
+          description: invalid event id
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: please login first / invalid token
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "409":
+          description: you already joined this event
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: failed to join event
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Join an event
+      tags:
+      - join events
+  /user/{eventId}/leave:
+    get:
+      consumes:
+      - application/json
+      description: Leave an event that the user previously joined
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: left event successfully
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "400":
+          description: invalid event id
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "401":
+          description: please login first / invalid token
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "404":
+          description: you have not joined this event
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: failed to leave event
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Leave an event
+      tags:
+      - leave events
+  /user/profile:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed profile information for the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success get user profile
+          schema:
+            allOf:
+            - $ref: '#/definitions/dto.Res'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.UserProfile'
+              type: object
+        "401":
+          description: please login first / invalid token
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "404":
+          description: user not found
+          schema:
+            $ref: '#/definitions/dto.Res'
+        "500":
+          description: internal server error
+          schema:
+            $ref: '#/definitions/dto.Res'
+      security:
+      - BasicAuth: []
+      summary: Get user profile
+      tags:
+      - Get user profile
+securityDefinitions:
+  BasicAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

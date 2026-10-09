@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: eventhub-db
+    environment:
+      - POSTGRES_USER=muftin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=eventhub-be-db
+    ports:
+      - "4321:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U muftin -d eventhub-be-db"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:8.10.2
+    container_name: eventhubredis
+    command: redis-server /etc/redis/redis.conf
+    volumes:
+      - ./eventhubRedis.conf:/etc/redis/redis.conf
+    ports:
+      - "8000:6379"
+
+  backend:
+    build:
+      context: .
+      dockerfile: BE.Dockerfile
+    image: be-golang
+    container_name: eventhub-be
+    env_file:
+      - .env
+    ports:
+      - "5678:5678"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started

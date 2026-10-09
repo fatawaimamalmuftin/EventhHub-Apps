@@ -1,0 +1,5 @@
+CREATE TABLE speaker (
+    id_speaker INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    position_job VARCHAR(255) NOT NULL
+);

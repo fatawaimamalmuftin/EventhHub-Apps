@@ -1,0 +1,12 @@
+INSERT INTO categories (name_categories) VALUES ('Technology');
+INSERT INTO categories (name_categories) VALUES ('Pemograman');
+INSERT INTO categories (name_categories) VALUES ('Web Development');
+INSERT INTO categories (name_categories) VALUES ('Mobile');
+INSERT INTO categories (name_categories) VALUES ('AI');
+INSERT INTO categories (name_categories) VALUES ('Data');
+INSERT INTO categories (name_categories) VALUES ('DevOps');
+INSERT INTO categories (name_categories) VALUES ('Design');
+INSERT INTO categories (name_categories) VALUES ('Cyber Security');
+INSERT INTO categories (name_categories) VALUES ('Business');
+INSERT INTO categories (name_categories) VALUES ('Career');
+INSERT INTO categories (name_categories) VALUES ('Community');

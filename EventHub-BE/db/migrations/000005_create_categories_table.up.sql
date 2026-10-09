@@ -1,0 +1,4 @@
+CREATE TABLE categories (
+    id_categories INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name_categories VARCHAR(255) NOT NULL UNIQUE
+);
