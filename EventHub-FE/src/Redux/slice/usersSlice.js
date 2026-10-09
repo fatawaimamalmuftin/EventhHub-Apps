@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    users: [],
+    users: false,
     token: "",
     userLogind: [],
 
@@ -14,12 +14,12 @@ const initialState = {
 
 export const LogoutThunk = createAsyncThunk(
     "LogoutThunk",
-    async(token, {rejectWithValue}) => {
+    async(_, {rejectWithValue}) => {
         try {
             const res = await fetch("http://localhost:5678/auth/logout", {
                 method: "POST",
                 headers: {
-                    "Authorization" : "Bearer " + token        
+                    "Authorization" : ""
                 }
             })
 
@@ -96,7 +96,7 @@ const usersSlice = createSlice({
 
     reducers: {
         logoutUser: (prevState) => {
-            prevState.userLogind = []
+            prevState.userLogind = false
         },
 
         changePassword: (prevState, {payload}) => {
@@ -179,13 +179,13 @@ const usersSlice = createSlice({
                     state.isPending = false
                     state.isFulfilled = true
                     state.isRejected = false
-                    state.message = payload.Message
+                    console.log(payload.Message)
                 },
                 rejected: (state, {payload}) => {
                     state.isPending = false
                     state.isFulfilled = false
                     state.isRejected = true
-                    state.error = payload
+                    console.log(payload)
                 },
             })
     }    
