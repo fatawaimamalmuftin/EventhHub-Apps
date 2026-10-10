@@ -16,4 +16,6 @@ WORKDIR /app
 
 COPY --from=builder /app/be-golang ./be-golang
 
+COPY --from=builder /app/public ./public
+
 CMD ["/app/be-golang"]
