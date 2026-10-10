@@ -3,7 +3,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
     users: false,
     token: "",
-    userLogind: [],
+    userLogind: false,
 
     isPending: false,
     isFulfilled: false,
@@ -14,12 +14,14 @@ const initialState = {
 
 export const LogoutThunk = createAsyncThunk(
     "LogoutThunk",
-    async(_, {rejectWithValue}) => {
+    async(_, {getState, rejectWithValue}) => {
         try {
+            const TokenLogout = getState().users.token
+
             const res = await fetch("http://localhost:5678/auth/logout", {
                 method: "POST",
                 headers: {
-                    "Authorization" : ""
+                    "Authorization" : TokenLogout
                 }
             })
 

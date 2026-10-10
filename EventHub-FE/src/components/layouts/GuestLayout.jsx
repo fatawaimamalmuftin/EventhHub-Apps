@@ -6,7 +6,7 @@ import UseGetItem from "../../Hooks/UseGetItem.js";
 
 export default function GuestLayout() {
 
-  const user = useSelector((state) => state.userState.user)
+  const user = useSelector((state) => state.usersState.userLogind)
 
   const admin = UseGetItem("admin","null")
   

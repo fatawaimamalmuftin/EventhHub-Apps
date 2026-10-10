@@ -725,7 +725,6 @@ export default function Navbar() {
             />
             }
 
-
             {showCom &&
             <ModalLogout
                 show={showCom}

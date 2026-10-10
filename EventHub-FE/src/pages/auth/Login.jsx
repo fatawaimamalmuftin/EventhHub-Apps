@@ -74,21 +74,7 @@ export default function Login() {
       password: data.password
     }))
     
-    // const isLogind = usersState.users.find((e)=> e.email === data.email)
-
-    // toast.success("login successful", {
-    //   autoClose: 1000
-    // })
-    
-    // reset()
-    
-    // setTimeout(()=>{
-    //   dispatch(login(isLogind))
-    //   navigate('/', {replace:true})
-    // },1500)
   }
-
-  // console.log(usersState.token)
 
   return (
     <main className="flex flex-col gap-5 py-8 px-5 sm:py-10 sm:px-10 md:px-16 lg:px-20 xl:px-30">
@@ -145,12 +131,7 @@ export default function Login() {
                     return true
                   } else if (!(v.includes("@"))) {
                     return "there must be an @ character"
-                  } 
-                  // else {
-                  //   // const dataLocal = JSON.parse(localStorage.getItem("users")||"[]")
-                  //   const isRegis = usersState.users.some((u) => u.email.toLowerCase() === v.toLowerCase())
-                  //   return isRegis || "This email not registered"
-                  // }
+                  }
                 }
               }
             })}
@@ -198,15 +179,6 @@ export default function Login() {
                     ) {
                       return true
                     } 
-                    // else {
-                    //   const isRegis = usersState.users.some(
-                    //     (u) =>
-                    //       u.email.toLowerCase() === fs.email?.toLowerCase() &&
-                    //       u.password === v
-                    //   )
-
-                    //   return isRegis || "This email or password not registered"
-                    // }
                   }
                 }
               })}

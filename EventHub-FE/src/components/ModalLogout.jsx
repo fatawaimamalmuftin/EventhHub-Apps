@@ -25,6 +25,9 @@ export default function ModalLogout({ show, setShow, admin = null, setAdmin = nu
             window.location.reload()
             return
         }
+
+        dispatch(LogoutThunk())
+        dispatch(logoutUser())
     }
 
     return (
@@ -76,11 +79,7 @@ export default function ModalLogout({ show, setShow, admin = null, setAdmin = nu
 
             <button
                 className="w-full border-t border-gray-200 px-7 py-5 text-left text-xl text-red-500 hover:bg-red-300 hover:text-white cursor-pointer"
-                onClick={() => {
-                    dispatch(LogoutThunk())
-                    dispatch(logoutUser())
-                    handleLogout()
-                }}
+                onClick={() =>handleLogout()}
             >
                 Sign Out
             </button>
