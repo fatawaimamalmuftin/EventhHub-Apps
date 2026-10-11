@@ -1,62 +1,62 @@
-
 services:
-  fe:
+  frontend:
     image: ghcr.io/fatawaimamalmuftin/eventhub-fe:latest
     container_name: eventhub-fe
     ports:
-      - "8080:8080"
+      - "4321:80"
     restart: unless-stopped
     depends_on:
-      be:
+      backend:
         condition: service_started
 
-  be:
+  backend:
     image: ghcr.io/fatawaimamalmuftin/eventhub-be:latest
     container_name: eventhub-be
     env_file:
       - .env
-    expose:
-      - "5678:8765"
+    ports:
+      - "5678:5678"
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
       redis:
-        condition: service_started
+        condition: service_healthy
 
   postgres:
     image: postgres:18
     container_name: eventhub-db
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATA}
     volumes:
-      - postgres_data:/var/lib/postgresql
-    expose:
-      - "5432:2345"
+      - pgdata:/var/lib/postgresql
+    ports:
+      - "5432:5432"
     healthcheck:
-      test:
-        - CMD-SHELL
-        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 3s
       timeout: 3s
-      retries: 10
+      retries: 5
     restart: unless-stopped
 
   redis:
     image: redis:8.10.2
     container_name: eventhub-redis
-    command:
-      - redis-server
-      - /etc/redis/redis.conf
+    command: redis-server /etc/redis/redis.conf
     volumes:
-      - ./eventhubRedis.conf:/etc/redis/redis.conf:ro
-      - redis_data:/data
-    expose:
-      - "6379:6379"
+      - ./EventHub-BE/eventhubRedis.conf:/etc/redis/redis.conf:ro
+      - redisdata:/data
+    ports:
+      - "8000:6379"
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --user ${REDIS_USERNAME} --pass ${REDIS_PASSWORD} --no-auth-warning ping | grep PONG"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
     restart: unless-stopped
 
 volumes:
-  postgres_data:
-  redis_data:
+  pgdata:
+  redisdata:
