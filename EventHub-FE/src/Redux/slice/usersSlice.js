@@ -16,7 +16,7 @@ export const LogoutThunk = createAsyncThunk(
     "LogoutThunk",
     async(_, {getState, rejectWithValue}) => {
         try {
-            const TokenLogout = getState().users.token
+            const TokenLogout = getState().usersState.token
 
             const res = await fetch("http://localhost:5678/auth/logout", {
                 method: "POST",
@@ -33,7 +33,7 @@ export const LogoutThunk = createAsyncThunk(
 
             return result
         } catch (err) {
-            return rejectWithValue(err instanceof Error ? err.message : err)            
+            return rejectWithValue(err instanceof Error ? err.message : err)
         }
     }
 )
@@ -97,10 +97,6 @@ const usersSlice = createSlice({
     initialState,
 
     reducers: {
-        logoutUser: (prevState) => {
-            prevState.userLogind = false
-        },
-
         changePassword: (prevState, {payload}) => {
             const user = prevState.users.find((e)=> e.id === payload.id)
 
@@ -168,33 +164,33 @@ const usersSlice = createSlice({
                     state.message = null
                 }
             })
-
             .addAsyncThunk(LogoutThunk, {
-                pending: (state) => {
-                    state.isPending = true
-                    state.isFulfilled = false
-                    state.isRejected = false
-                    state.error = null
-                    state.message = null
-                },
-                fulfilled: (state, {payload}) => {
-                    state.isPending = false
-                    state.isFulfilled = true
-                    state.isRejected = false
-                    console.log(payload.Message)
-                },
-                rejected: (state, {payload}) => {
-                    state.isPending = false
-                    state.isFulfilled = false
-                    state.isRejected = true
-                    console.log(payload)
-                },
-            })
+            pending: (state) => {
+                state.isPending = true
+                state.isFulfilled = false
+                state.isRejected = false
+                state.error = null
+                state.message = null
+            },
+            fulfilled: (state, { payload }) => {
+                state.isPending = false
+                state.isFulfilled = true
+                state.userLogind = false
+                state.token = ""
+                state.message = payload.Message
+            },
+            rejected: (state, { payload }) => {
+                state.isPending = false
+                state.isRejected = true
+                state.userLogind = false
+                state.token = ""
+                state.error = payload
+            },
+        })
     }    
 })
 
 export const {
-    logoutUser,
     changePassword,
     resetErrorAndMassage
 } = usersSlice.actions

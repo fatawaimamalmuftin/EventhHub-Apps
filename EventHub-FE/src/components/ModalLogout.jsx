@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router"
-import { LogoutThunk, logoutUser } from "../Redux/slice/usersSlice.js"
+import { LogoutThunk } from "../Redux/slice/usersSlice.js"
 
 export default function ModalLogout({ show, setShow, admin = null, setAdmin = null, comunities = null, setComunities = null }) {
 
@@ -10,7 +10,7 @@ export default function ModalLogout({ show, setShow, admin = null, setAdmin = nu
 
     const dispatch = useDispatch()
     
-    function handleLogout() {
+    async function handleLogout() {
 
         if (admin) {
             setAdmin(false)
@@ -26,8 +26,13 @@ export default function ModalLogout({ show, setShow, admin = null, setAdmin = nu
             return
         }
 
-        dispatch(LogoutThunk())
-        dispatch(logoutUser())
+        try {
+            await dispatch(LogoutThunk()).unwrap()
+        } catch (err) {
+            console.log(err) 
+        } finally {
+            setShow(false)
+        }
     }
 
     return (
