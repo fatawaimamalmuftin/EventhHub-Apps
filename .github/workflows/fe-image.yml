@@ -41,4 +41,4 @@ jobs:
           context: ./EventHub-FE
           file: ./EventHub-FE/FE.Dockerfile
           push: true
-          tags: ghcr.io/${{github.repository}}/eventhub-fe:latest
+          tags: ghcr.io/${{github.repository_owner}}/eventhub-fe:latest
