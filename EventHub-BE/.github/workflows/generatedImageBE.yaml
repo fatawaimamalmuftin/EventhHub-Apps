@@ -2,18 +2,21 @@ name: "genereate image BE-Golang eventhub"
 on:
     push:
         branches: 
-            - cicd
+            - development
 jobs:
     generate:
         runs-on: ubuntu-24.04
         steps:
-            - name: ambil repo yg paling baru di push
+            - name: get new repo commit
               uses: actions/checkout@v7
+
+            - name: get in directory EventHub-BE
+              run: cd EventHub-BE
             
-            - name: ngejalanin docker buil dengan nama gontainer format ghcr
+            - name: running docker build and make image with name format GHCR
               run: docker build -t ghcr.io/${{github.repository}}:latest -f BE.Dockerfile .
 
-            - name: login ke ghcr
+            - name: login to ghcr
               run: echo "${{secrets.GITHUB_TOKEN}}" | docker login ghcr.io -u ${{github.action}} --password-stdin
 
             - name: push to ghcr

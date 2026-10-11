@@ -1,0 +1,62 @@
+
+services:
+  fe:
+    image: ghcr.io/fatawaimamalmuftin/eventhub-fe:latest
+    container_name: eventhub-fe
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    depends_on:
+      be:
+        condition: service_started
+
+  be:
+    image: ghcr.io/fatawaimamalmuftin/eventhub-be:latest
+    container_name: eventhub-be
+    env_file:
+      - .env
+    expose:
+      - "5678:8765"
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: postgres:18
+    container_name: eventhub-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    expose:
+      - "5432:2345"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.10.2
+    container_name: eventhub-redis
+    command:
+      - redis-server
+      - /etc/redis/redis.conf
+    volumes:
+      - ./eventhubRedis.conf:/etc/redis/redis.conf:ro
+      - redis_data:/data
+    expose:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:

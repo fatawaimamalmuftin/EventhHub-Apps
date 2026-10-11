@@ -1,0 +1,24 @@
+name: "generate image FE-React.js eventhub"
+
+on:
+    push: 
+        branches: 
+            - development
+jobs:
+    generate:
+        runs-on: ubuntu-24.04
+        steps:
+            - name: get new repo commit
+              uses: actions/checkout@v7
+
+            - name: get in directory EvenHub-FE
+              run: cd Eventhub-FE
+
+            - name: running docker build and make image with name format GHCR
+              run: docker build -t ghcr.io/${{github.repository}}:latest -f FE.Dockerfile .
+            
+            - name: login to ghcr
+              run: echo "${{secrets.GITHUB_TOKEN}}" | docker login ghcr.io -u ${{github.action}} --password-stdin
+
+            - name: push to ghcr
+              run: docker push ghcr.io/${{github.repository}}:latest

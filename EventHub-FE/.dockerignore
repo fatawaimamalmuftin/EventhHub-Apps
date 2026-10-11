@@ -1,4 +1,6 @@
 node_modules
 .git
-# .env
-dist
+.env
+id_rsa
+id_rsa.pub
+ygLama.txt

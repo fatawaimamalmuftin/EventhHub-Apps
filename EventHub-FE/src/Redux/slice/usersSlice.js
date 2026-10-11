@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { apiFetch } from "../../api";
 
 const initialState = {
     users: false,
@@ -18,7 +19,7 @@ export const LogoutThunk = createAsyncThunk(
         try {
             const TokenLogout = getState().usersState.token
 
-            const res = await fetch("http://localhost:5678/auth/logout", {
+            const res = await apiFetch("/auth/logout", {
                 method: "POST",
                 headers: {
                     "Authorization" : TokenLogout
@@ -42,7 +43,7 @@ export const RegisThunk = createAsyncThunk(
     "RegisAtThunk",
     async(data, {rejectWithValue}) => {
         try {
-            const res = await fetch("http://localhost:5678/auth/regis",{
+            const res = await apiFetch("/auth/regis",{
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json"
@@ -68,7 +69,7 @@ export const LoginThunk = createAsyncThunk(
     "LoginAtThunk",
     async(data, {rejectWithValue}) =>{
         try {
-            const res = await fetch("http://localhost:5678/auth/login", {
+            const res = await apiFetch("/auth/login", {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json"
