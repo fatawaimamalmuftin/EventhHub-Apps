@@ -1,0 +1,44 @@
+name: Build and Push EventHub FE
+
+on:
+  push:
+    branches:
+      - development
+    paths:
+      - "EventHub-FE/src/**"
+      - "EventHub-FE/public/**"
+      - "EventHub-FE/index.html"
+      - "EventHub-FE/package.json"
+      - "EventHub-FE/package-lock.json"
+      - "EventHub-FE/vite.config.js"
+      - "EventHub-FE/nginx.conf"
+      - "EventHub-FE/FE.Dockerfile"
+      - ".github/workflows/fe-image.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Build and push FE image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./EventHub-FE
+          file: ./EventHub-FE/FE.Dockerfile
+          push: true
+          tags: ghcr.io/${{github.repository}}/eventhub-fe:latest
