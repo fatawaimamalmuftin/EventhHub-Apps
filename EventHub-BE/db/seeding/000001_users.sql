@@ -12,7 +12,7 @@ INSERT INTO users (
     '$argon2id$v=19$m=65536, t=2, p=2$DwuHLfW8Phd+sfa5OfOoYQ$2y5td8W+dOdEZqPur+qXVbMgRHjN4LmENuI/m8CBy5E',
     'Pengguna EventHub nomor 1, aktif mengikuti event dan komunitas teknologi.',
     'Jakarta',
-    '/uploads/profiles/aku.png',
+    '/uploads/profiles/user-1-1791645351.jpg',
     'Fullstack Developer'
 );
 INSERT INTO users (full_name, email, password, bio, location, profile, job) VALUES ('Andi Saputra', 'user02@eventhub.test', '$argon2id$v=19$m=65536,t=2,p=2$HHEMIXgPAE/Din8IGfU4pQ$WwFFeQqGan3Zq2fj0IP0jiHQuX62waOTrlfRo9uE8mA', 'Pengguna EventHub nomor 2, aktif mengikuti event dan komunitas teknologi.', 'Depok', '/uploads/profiles/user-02.jpg', 'Backend Developer');
