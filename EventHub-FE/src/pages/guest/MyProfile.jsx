@@ -34,7 +34,7 @@ export default function MyProfile() {
                     <label className="block w-full h-full">
                         {userLogind?.profile ? (
                         <img
-                            src={"http://localhost:5678"+userLogind.profile}
+                            src={userLogind.profile}
                             alt="Profile"
                             className="w-full h-full object-cover"
                             // onError={() => {
