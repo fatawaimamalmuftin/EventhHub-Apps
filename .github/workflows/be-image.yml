@@ -7,8 +7,6 @@ on:
     paths:
       - "EventHub-BE/**"
       - ".github/workflows/be-image.yml"
-  workflow_dispatch:
-
 permissions:
   contents: read
   packages: write

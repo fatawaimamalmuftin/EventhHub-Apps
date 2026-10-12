@@ -14,8 +14,6 @@ on:
       - "EventHub-FE/nginx.conf"
       - "EventHub-FE/FE.Dockerfile"
       - ".github/workflows/fe-image.yml"
-  workflow_dispatch:
-
 permissions:
   contents: read
   packages: write
