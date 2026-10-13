@@ -3,7 +3,7 @@ name: Build and Push EventHub BE
 on:
   push:
     branches:
-      - development
+      - staging
     paths:
       - "EventHub-BE/**"
       - ".github/workflows/be-image.yml"

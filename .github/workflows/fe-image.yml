@@ -3,7 +3,7 @@ name: Build and Push EventHub FE
 on:
   push:
     branches:
-      - development
+      - staging
     paths:
       - "EventHub-FE/src/**"
       - "EventHub-FE/public/**"

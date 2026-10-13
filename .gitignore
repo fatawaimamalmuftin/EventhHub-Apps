@@ -2,3 +2,4 @@
 .env.*
 !.env.example
 id_rsa
+catatam.txt
